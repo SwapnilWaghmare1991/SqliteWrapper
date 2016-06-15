@@ -17,7 +17,7 @@ static sqlite3_stmt *statement = nil;
 @implementation DBhelper
 
 
-
+// get shared instance
 +(DBhelper*)getSharedInstance{
     if (!sharedInstance) {
         sharedInstance = [[super allocWithZone:NULL]init];
@@ -26,12 +26,14 @@ static sqlite3_stmt *statement = nil;
     return sharedInstance;
 }
 
-
+// making database threadsafe.. at a  time only one thread can access
 -(void)initializDatabaseQueue
 {
     self.databaseQueue =  dispatch_queue_create("com.swapnil.app.database", 0);
     NSLog(@"Threadsafe check : %d",sqlite3_threadsafe());
 }
+
+// create database...sqlite files in Document directory
 -(void)createDBwithName:(NSString *)dbName{
     
     dispatch_sync(self.databaseQueue, ^{
@@ -85,18 +87,21 @@ static sqlite3_stmt *statement = nil;
    
 }
 
-
+// create table inside selected database using mentioned query
 -(void)createTableNamed :(NSString *)tableName usingQuery:(NSString *)createTableQuery forDatabaseNamed:(NSString *)dbName
 {
+    // check for db name...remove extension if exist
     NSString *dbNameWithoutExtension = [[dbName lastPathComponent] stringByDeletingPathExtension];
     if(dbNameWithoutExtension == nil)
     {
         dbNameWithoutExtension = dbName;
     }
-    
+    // check for db created successfully or not
     BOOL isDBCreatedSuccessfully = [[NSUserDefaults standardUserDefaults] valueForKey:dbNameWithoutExtension];
-    
+
+    // chcek if query is create table or not
   BOOL isTableNamePresentInQuery = [createTableQuery containsString:[NSString stringWithFormat:@"create table"]];
+    // if true
     if (isDBCreatedSuccessfully && isTableNamePresentInQuery) {
         BOOL istableCreated  = YES;
         const char *dbpath = [self.databasePath UTF8String];
@@ -107,8 +112,10 @@ static sqlite3_stmt *statement = nil;
             if (sqlite3_exec(database, sql_stmt, NULL, NULL, &errMsg)
                 != SQLITE_OK)
             {
+                 // wrong query of create table
                 istableCreated = NO;
                 NSLog(@"Failed to create table");
+               
             }
             else
             {
@@ -121,21 +128,29 @@ static sqlite3_stmt *statement = nil;
     }
     else
     {
+        // database not exist
         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:tableName];
         NSLog(@"database not created");
     }
     
  }
 
+
+// perform insert update delete operations indatabase
 -(void)performInsertUpdateDeleteOperationInDatabseNamed:(NSString *)dbName insideTableNamed:(NSString *)tableName withQuery:(NSString *)query
 {
+    // check for db name...remove extension if exist
+    
+    
     NSString *dbNameWithoutExtension = [[dbName lastPathComponent] stringByDeletingPathExtension];
     if(dbNameWithoutExtension == nil)
     {
         dbNameWithoutExtension = dbName;
     }
-    
+    // check for db created successfully or not
     BOOL isDBCreatedSuccessfully = [[NSUserDefaults standardUserDefaults] valueForKey:dbNameWithoutExtension];
+    
+    // chcek if query is create table or not
     BOOL isTablePresent  = [[NSUserDefaults standardUserDefaults] valueForKey:tableName];
     
     if (isDBCreatedSuccessfully && isTablePresent) {
@@ -165,7 +180,7 @@ static sqlite3_stmt *statement = nil;
         
     }
     else
-    {
+    {   // db ot table not present
         NSLog(@"Either DB or Table not present");
     }
 }

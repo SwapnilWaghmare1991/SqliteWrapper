@@ -9,7 +9,6 @@
 #ifndef Header_h
 #define Header_h
 
-#define DBEmployee @"Employee" 
 #define DBPerson @"Person.sqlite"
 #define TableEmployeeInDBEmployee  @"tableindbemployee"
 #define TablePersonInDBPerson  @"tableindbperson"
