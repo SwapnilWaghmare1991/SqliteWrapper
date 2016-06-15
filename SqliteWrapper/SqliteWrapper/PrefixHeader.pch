@@ -1,0 +1,16 @@
+//
+//  PrefixHeader.pch
+//  SqliteWrapper
+//
+//  Created by Cellpointmobile on 12/06/16.
+//  Copyright © 2016 Swapnil. All rights reserved.
+//
+
+#ifndef PrefixHeader_pch
+#define PrefixHeader_pch
+#import "CONSTANTS.h"
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+
+#endif /* PrefixHeader_pch */
