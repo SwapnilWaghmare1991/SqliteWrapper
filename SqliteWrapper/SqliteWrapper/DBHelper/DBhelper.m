@@ -186,6 +186,76 @@ static sqlite3_stmt *statement = nil;
 }
 
 
+-(NSMutableArray *)getDataFromDatabaseNamed:(NSString *)dbName fromTableNamed:(NSString *)tableName usingQuery:(NSString *)query
+{
+    NSString *dbNameWithoutExtension = [[dbName lastPathComponent] stringByDeletingPathExtension];
+    if(dbNameWithoutExtension == nil)
+    {
+        dbNameWithoutExtension = dbName;
+    }
+    // check for db created successfully or not
+    BOOL isDBCreatedSuccessfully = [[NSUserDefaults standardUserDefaults] valueForKey:dbNameWithoutExtension];
+    
+    // chcek if query is create table or not
+    BOOL isTablePresent  = [[NSUserDefaults standardUserDefaults] valueForKey:tableName];
+    NSMutableArray *finalArray  = nil;
+    if (isDBCreatedSuccessfully && isTablePresent) {
+        
+        const char *dbpath = [self.databasePath UTF8String];
+        if (sqlite3_open(dbpath, &database) == SQLITE_OK)
+        {
+            NSString *querySQL = query;
+            const char *query_stmt = [querySQL UTF8String];
+            NSMutableArray *keyArray = [self tableInfo:tableName];
+            finalArray = [[NSMutableArray alloc] init];
+            if (sqlite3_prepare_v2(database,query_stmt, -1, &statement, NULL) == SQLITE_OK)
+            {
+              
+                
+                while (sqlite3_step(statement) == SQLITE_ROW)
+                {
+                      NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+                    for (int i = 0; i < [keyArray count] ; i++) {
+                        
+                        id val  = sqlite3_column_text(statement, i);
+                        sqlite3_co
+                        [dict setObject:val forKey:[keyArray objectAtIndex:i]];
+                    }
+                    [finalArray addObject:dict];
+                }
+                
+                sqlite3_reset(statement);
+            }
+        }
+    }
+    return finalArray;
+  
+}
+
+-(NSMutableArray*)tableInfo:(NSString *)table{
+    
+    sqlite3_stmt *sqlStatement;
+    
+    NSMutableArray *result = [NSMutableArray array];
+    
+    const char *sql = [[NSString stringWithFormat:@"PRAGMA table_info('%@')",table] UTF8String];
+    
+    if(sqlite3_prepare(database, sql, -1, &sqlStatement, NULL) != SQLITE_OK)
+        
+    {
+        NSLog(@"Problem with prepare statement tableInfo %@",
+              [NSString stringWithUTF8String:(const char *)sqlite3_errmsg(database)]);
+        
+    }
+    
+    while (sqlite3_step(sqlStatement)==SQLITE_ROW)
+    {
+        [result addObject:
+         [NSString stringWithUTF8String:(char*)sqlite3_column_text(sqlStatement, 1)]];
+    }
+    
+    return result;
+}
 
 
 @end

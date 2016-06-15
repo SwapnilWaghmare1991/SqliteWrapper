@@ -12,6 +12,7 @@
 @interface DBhelper : NSObject
 @property (strong , nonatomic) NSString *databasePath;
 @property (nonatomic, strong) dispatch_queue_t databaseQueue;
+@property (strong , nonatomic)NSMutableArray *marrFetcheddata;
 
 
 +(DBhelper*)getSharedInstance;
@@ -22,6 +23,6 @@
 
 -(void)performInsertUpdateDeleteOperationInDatabseNamed:(NSString *)dbName insideTableNamed:(NSString *)tableName withQuery:(NSString *)query;
 
-
+-(NSMutableArray *)getDataFromDatabaseNamed:(NSString *)dbName fromTableNamed:(NSString *)tableName usingQuery:(NSString *)query;
 
 @end

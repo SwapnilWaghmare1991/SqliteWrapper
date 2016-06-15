@@ -21,8 +21,7 @@
     [super viewDidLoad];
     
     DBhelper *dbinst1 = [DBhelper getSharedInstance];
-    // create database employee
-    //[dbinst1 createDBwithName:DBEmployee];
+   
     // create database person
     [dbinst1 createDBwithName:DBPerson];
     // create table in database employee
@@ -37,7 +36,10 @@
     // insert data into person database
     NSString *insertSQL2 = [NSString stringWithFormat:@"insert into %@ (regno,name,birthyear) values(\"%d\",\"%@\",\"%@\")",TablePersonInDBPerson,1, @"Swapnil", @"1991"];
     [dbinst1 performInsertUpdateDeleteOperationInDatabseNamed:DBPerson insideTableNamed:TablePersonInDBPerson withQuery:insertSQL2];
-    
+    NSString * fetchDataQuery = [NSString stringWithFormat:@"Select * from %@",TablePersonInDBPerson];
+
+    NSMutableArray *marrPersonInfo = [dbinst1 getDataFromDatabaseNamed:DBPerson fromTableNamed:TablePersonInDBPerson usingQuery:fetchDataQuery];
+    NSLog(@"%@",marrPersonInfo);
     // Do any additional setup after loading the view, typically from a nib.
 }
 

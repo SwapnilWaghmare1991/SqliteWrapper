@@ -13,25 +13,9 @@
             timestampString = "487645367.268572"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "153"
-            endingLineNumber = "153"
-            landmarkName = "-performInsertUpdateDeleteOperationInDatabseNamed:insideTableNamed:withQuery:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "SqliteWrapper/DBHelper/DBhelper.m"
-            timestampString = "487645367.268572"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
             startingLineNumber = "133"
             endingLineNumber = "133"
-            landmarkName = "-performInsertUpdateDeleteOperationInDatabseNamed:insideTableNamed:withQuery:"
+            landmarkName = "-createTableNamed:usingQuery:forDatabaseNamed:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
