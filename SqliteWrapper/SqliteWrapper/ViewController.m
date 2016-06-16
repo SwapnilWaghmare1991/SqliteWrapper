@@ -36,7 +36,28 @@
     // insert data into person database
     NSString *insertSQL2 = [NSString stringWithFormat:@"insert into %@ (regno,name,birthyear) values(\"%d\",\"%@\",\"%@\")",TablePersonInDBPerson,1, @"Swapnil", @"1991"];
     [dbinst1 performInsertUpdateDeleteOperationInDatabseNamed:DBPerson insideTableNamed:TablePersonInDBPerson withQuery:insertSQL2];
+    NSString *insertSQL3 = [NSString stringWithFormat:@"insert into %@ (regno,name,birthyear) values(\"%d\",\"%@\",\"%@\")",TablePersonInDBPerson,2, @"Amey", @"1991"];
+    [dbinst1 performInsertUpdateDeleteOperationInDatabseNamed:DBPerson insideTableNamed:TablePersonInDBPerson withQuery:insertSQL3];
+    NSString *insertSQL4 = [NSString stringWithFormat:@"insert into %@ (regno,name,birthyear) values(\"%d\",\"%@\",\"%@\")",TablePersonInDBPerson,3, @"Upendra", @"1991"];
+    [dbinst1 performInsertUpdateDeleteOperationInDatabseNamed:DBPerson insideTableNamed:TablePersonInDBPerson withQuery:insertSQL4];
+    NSString *insertSQL5 = [NSString stringWithFormat:@"insert into %@ (regno,name,birthyear) values(\"%d\",\"%@\",\"%@\")",TablePersonInDBPerson,4, @"Jayendra", @"1991"];
+    [dbinst1 performInsertUpdateDeleteOperationInDatabseNamed:DBPerson insideTableNamed:TablePersonInDBPerson withQuery:insertSQL5];
+    NSString *insertSQL6 = [NSString stringWithFormat:@"insert into %@ (regno,name,birthyear) values(\"%d\",\"%@\",\"%@\")",TablePersonInDBPerson,5, @"Akash", @"1991"];
+    [dbinst1 performInsertUpdateDeleteOperationInDatabseNamed:DBPerson insideTableNamed:TablePersonInDBPerson withQuery:insertSQL6];
+    NSString *insertSQL7 = [NSString stringWithFormat:@"insert into %@ (regno,name,birthyear) values(\"%d\",\"%@\",\"%@\")",TablePersonInDBPerson,6, @"Anuj", @"1991"];
+    [dbinst1 performInsertUpdateDeleteOperationInDatabseNamed:DBPerson insideTableNamed:TablePersonInDBPerson withQuery:insertSQL7];
     NSString * fetchDataQuery = [NSString stringWithFormat:@"Select * from %@",TablePersonInDBPerson];
+    NSString *insertSQL8 = [NSString stringWithFormat:@"insert into %@ (regno,name,birthyear) values(\"%d\",\"%@\",\"%@\")",TablePersonInDBPerson,7, @"Dipendra", @"1991"];
+    [dbinst1 performInsertUpdateDeleteOperationInDatabseNamed:DBPerson insideTableNamed:TablePersonInDBPerson withQuery:insertSQL8];
+    NSString *insertSQL9 = [NSString stringWithFormat:@"insert into %@ (regno,name,birthyear) values(\"%d\",\"%@\",\"%@\")",TablePersonInDBPerson,8, @"Rohan", @"1991"];
+    [dbinst1 performInsertUpdateDeleteOperationInDatabseNamed:DBPerson insideTableNamed:TablePersonInDBPerson withQuery:insertSQL9];
+    NSString *insertSQL10 = [NSString stringWithFormat:@"insert into %@ (regno,name,birthyear) values(\"%d\",\"%@\",\"%@\")",TablePersonInDBPerson,9, @"Ranjit", @"1991"];
+    [dbinst1 performInsertUpdateDeleteOperationInDatabseNamed:DBPerson insideTableNamed:TablePersonInDBPerson withQuery:insertSQL10];
+    NSString *insertSQL11 = [NSString stringWithFormat:@"insert into %@ (regno,name,birthyear) values(\"%d\",\"%@\",\"%@\")",TablePersonInDBPerson,10, @"Akshay", @"1991"];
+    [dbinst1 performInsertUpdateDeleteOperationInDatabseNamed:DBPerson insideTableNamed:TablePersonInDBPerson withQuery:insertSQL11];
+    
+    NSString *insertSQL12 = [NSString stringWithFormat:@"insert into %@ (regno,name,birthyear) values(\"%d\",\"%@\",\"%@\")",TablePersonInDBPerson,11, @"Aman", @"1991"];
+    [dbinst1 performInsertUpdateDeleteOperationInDatabseNamed:DBPerson insideTableNamed:TablePersonInDBPerson withQuery:insertSQL12];
 
     NSMutableArray *marrPersonInfo = [dbinst1 getDataFromDatabaseNamed:DBPerson fromTableNamed:TablePersonInDBPerson usingQuery:fetchDataQuery];
     NSLog(@"%@",marrPersonInfo);

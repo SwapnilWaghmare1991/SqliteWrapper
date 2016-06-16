@@ -218,8 +218,8 @@ static sqlite3_stmt *statement = nil;
                       NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
                     for (int i = 0; i < [keyArray count] ; i++)
                     {
-                        
-                        switch ([self getColumnType:i _Statement:statement])
+                        int num =[self getColumnType:i _Statement:statement];
+                        switch (num)
                         {
                             case SQLITE_INTEGER:
                             {
@@ -357,10 +357,11 @@ static sqlite3_stmt *statement = nil;
     if (ch!=nil)
     {
        NSString *strType=[[NSString stringWithCString:ch encoding:NSUTF8StringEncoding] uppercaseString];
+       
         
         NSRange range=[strType rangeOfString:@"("];
         
-        if (range.location > 0)
+        if (range.length > 0)
         {
             strType=[strType substringToIndex:range.location];
         }
