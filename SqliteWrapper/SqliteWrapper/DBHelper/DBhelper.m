@@ -7,6 +7,7 @@
 //
 
 #import "DBhelper.h"
+#define SQLITE_DATE SQLITE_NULL+1
 
 
 static DBhelper *sharedInstance = nil;
@@ -215,9 +216,54 @@ static sqlite3_stmt *statement = nil;
                 while (sqlite3_step(statement) == SQLITE_ROW)
                 {
                       NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-                    for (int i = 0; i < [keyArray count] ; i++) {
-                        id val  = (__bridge id)(sqlite3_column_value(statement, i));
-                        [dict setObject:val forKey:[keyArray objectAtIndex:i]];
+                    for (int i = 0; i < [keyArray count] ; i++)
+                    {
+                        
+                        switch ([self getColumnType:i _Statement:statement])
+                        {
+                            case SQLITE_INTEGER:
+                            {
+                                [dict setValue:[NSString stringWithFormat:@"%d",sqlite3_column_int(statement, i)] forKey:[keyArray objectAtIndex:i]];
+                            }
+                            break;
+                                
+                            case SQLITE_FLOAT:
+                            {
+                                [dict setValue:[NSString stringWithFormat:@"%f",sqlite3_column_double(statement, i)] forKey:[keyArray objectAtIndex:i]];
+                            }
+                                break;
+                                
+                            case SQLITE_BLOB:
+                            {
+                                
+                                int len = sqlite3_column_bytes(statement, i);
+                                NSData *dataObj = [[NSData alloc] initWithBytes: sqlite3_column_blob(statement, 0) length: len];
+                                [dict setValue:dataObj forKey:[keyArray objectAtIndex:i]];
+                            }
+                                break;
+                                
+                            case SQLITE_NULL:
+                            {
+                                [dict setValue:@"" forKey:[keyArray objectAtIndex:i]];
+                            }
+                            break;
+                                
+                            case SQLITE_DATE:
+                            {
+                                [dict setValue:@"" forKey:[keyArray objectAtIndex:i]];
+                            }
+                                break;
+                                
+                            default:
+                            {
+                                const unsigned char *value = sqlite3_column_text(statement,i);  // use zero
+                                 [dict setValue:[NSString stringWithUTF8String:(const char *)value] forKey:[keyArray objectAtIndex:i]];
+                            }
+                               
+                                break;
+                        };
+                        
+                        
                     }
                     [finalArray addObject:dict];
                     
@@ -284,6 +330,77 @@ static sqlite3_stmt *statement = nil;
     
     return result;
 }
+
+
+-(int)getColumnType:(int)index _Statement:(sqlite3_stmt *)stmt
+{
+    int type=-1;
+    
+    NSArray *arrBlobTypes=@[@"BINARY", @"BLOB", @"VARBINARY"];
+    
+    NSArray *arrCharTypes=@[@"CHAR", @"CHARACTER", @"CLOB",@"NATIONAL VARYING CHARACTER",@"NCHAR",@"NVARCHAR",@"TEXT",@"NATIVE CHARACTER",@"VARCHAR",@"VARIANT",@"VARYING CHARACTER"];
+   
+    NSArray *arrDateTypes=@[@"DATE", @"DATETIME", @"TIME",@"TIMESTAMP"];
+
+    NSArray *arrIntTypes=@[@"BIGINT", @"BIT", @"BOOL",@"BOOLEAN",@"INT",@"INT2",@"INT8",@"INTEGER",@"MEDIUMINT",@"SMALLINT",@"TINYINT"];
+    
+    NSArray *arrNullTypes=@[@"NULL"];
+
+    NSArray *arrRealTypes=@[@"DECIMAL", @"DOUBLE", @"DOUBLE PRECISION",@"FLOAT",@"NUMERIC",@"REAL"];
+    
+   //let Determine type of column
+
+    
+   const char *ch=sqlite3_column_decltype(stmt, index);
+    NSLog(@"SQLiteDB  column type: %s",ch);
+    
+    if (ch!=nil)
+    {
+       NSString *strType=[[NSString stringWithCString:ch encoding:NSUTF8StringEncoding] uppercaseString];
+        
+        NSRange range=[strType rangeOfString:@"("];
+        
+        if (range.location > 0)
+        {
+            strType=[strType substringToIndex:range.location];
+        }
+        
+        
+        
+        if([arrIntTypes containsObject:strType])
+        {
+            return SQLITE_INTEGER;
+        }
+        if([arrRealTypes containsObject:strType])
+        {
+            return SQLITE_FLOAT;
+        }
+        if([arrCharTypes containsObject:strType])
+        {
+            return SQLITE_TEXT;
+        }
+        if([arrBlobTypes containsObject:strType])
+        {
+            return SQLITE_BLOB;
+        }
+        if([arrNullTypes containsObject:strType])
+        {
+            return SQLITE_NULL;
+        }
+        if([arrDateTypes containsObject:strType])
+        {
+            return SQLITE_DATE;
+        }
+        return SQLITE_TEXT;
+    }
+    else
+    {
+        // For expressions and sub-queries
+        type = sqlite3_column_type(stmt, index);
+    }
+    return type;
+}
+
 
 
 @end
