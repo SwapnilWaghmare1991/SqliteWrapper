@@ -216,12 +216,12 @@ static sqlite3_stmt *statement = nil;
                 {
                       NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
                     for (int i = 0; i < [keyArray count] ; i++) {
-                        
-                        id val  = sqlite3_column_text(statement, i);
-                        sqlite3_co
+                        id val  = (__bridge id)(sqlite3_column_value(statement, i));
                         [dict setObject:val forKey:[keyArray objectAtIndex:i]];
                     }
                     [finalArray addObject:dict];
+                    
+
                 }
                 
                 sqlite3_reset(statement);
@@ -232,6 +232,34 @@ static sqlite3_stmt *statement = nil;
   
 }
 
+// drop table
+-(void)dropTable:(NSString *)tablename
+{
+    const char *dbpath = [self.databasePath UTF8String];
+    if (sqlite3_open(dbpath, &database) == SQLITE_OK)
+    {
+        const char *dropTable = [[NSString stringWithFormat:@"DROP table %@",tablename] UTF8String];
+        sqlite3_prepare_v2(database, dropTable,
+                           -1, &statement, NULL);
+        dispatch_sync(self.databaseQueue, ^{
+            if (sqlite3_step(statement) == SQLITE_DONE)
+            {
+                NSLog(@"table dropped");
+            }
+            
+            else
+            {
+                NSLog(@"table not dropped");
+            }
+        });
+       
+    }
+    
+    else
+    {
+        NSLog(@"Not opened for dropping");
+    }
+}
 -(NSMutableArray*)tableInfo:(NSString *)table{
     
     sqlite3_stmt *sqlStatement;

@@ -25,4 +25,6 @@
 
 -(NSMutableArray *)getDataFromDatabaseNamed:(NSString *)dbName fromTableNamed:(NSString *)tableName usingQuery:(NSString *)query;
 
+-(void)dropTable:(NSString *)tablename;
+
 @end

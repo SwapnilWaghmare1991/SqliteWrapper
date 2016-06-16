@@ -40,6 +40,8 @@
 
     NSMutableArray *marrPersonInfo = [dbinst1 getDataFromDatabaseNamed:DBPerson fromTableNamed:TablePersonInDBPerson usingQuery:fetchDataQuery];
     NSLog(@"%@",marrPersonInfo);
+    
+    [dbinst1 dropTable:TableEmployeeInDBEmployee];
     // Do any additional setup after loading the view, typically from a nib.
 }
 
